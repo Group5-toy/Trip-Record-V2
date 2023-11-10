@@ -38,12 +38,32 @@ public class MoveJourney extends BaseJourney {
     @Column(nullable = false)
     private JourneyType type;
 
-    // null 값 채킹 필요
-    public void updateEntity(MoveJourneyUpdateRequest request) {
-        this.name = request.getName();
-        this.vehicle = request.getVehicle();
-        this.startPoint = request.getStartPoint();
-        this.endPoint = request.getEndPoint();
+
+    private void setUpdateName(String name) {
+        this.name = name;
     }
+
+    private void setUpdateVehicle(String vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    private void setUpdateStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    private void setUpdateEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public void setUpdateColumns(MoveJourneyUpdateRequest moveJourneyUpdateRequest) {
+        setUpdateName(moveJourneyUpdateRequest.getName());
+        setUpdateVehicle(moveJourneyUpdateRequest.getVehicle());
+        setUpdateStartPoint(moveJourneyUpdateRequest.getStartPoint());
+        setUpdateEndPoint(moveJourneyUpdateRequest.getEndPoint());
+        setUpdateStartTime(moveJourneyUpdateRequest.getStartTime());
+        setUpdateEndTime(moveJourneyUpdateRequest.getEndTime());
+    }
+
+
 
 }

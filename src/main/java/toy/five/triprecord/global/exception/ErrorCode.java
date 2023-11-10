@@ -17,8 +17,17 @@ public enum ErrorCode {
     TRIP_VALIDATE_ERROR(400,"입력하신 데이터 검증에 실패하였습니다."),
 
     //Journey
-    JOURNEY_NO_EXIST(400,"해당 ID의 여행 정보가 없습니다.")
+    JOURNEY_NO_EXIST(400,"해당 ID의 여행 정보가 없습니다."),
 
+    //User
+    USER_PATCH_NO_PARAMETER_ERROR(400,"패스워드와 이름 중 하나를 입력해주세요."),
+    USER_EMAIL_MISMATCH_TYPE_ERROR(400,"이메일 형식으로 입력해주세요."),
+    USER_EMPTY_EMAIL_ERROR(400,"이메일을 입력해주세요."),
+    USER_EMPTY_PASSWORD_ERROR(400,"비밀번호를 입력해주세요."),
+    USER_EMPTY_NAME_ERROR(400,"이름을 입력해주세요."),
+    USER_CAN_NOT_FIND_EMAIL(400,"조회하고자 하는 정보가 없습니다."),
+    USER_EMAIL_DUPULICATE_ERROR(400,"이미 사용중인 이메일입니다."),
+    USER_COMMNON_PASSWORD_MISMATCH_ERROR(400,"패스워드는 대소문자 1개와 숫자를 포함한 6~10자리로 써주세요."),
     ;
 
     private final int statusCode;

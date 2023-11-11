@@ -17,10 +17,8 @@ import toy.five.triprecord.domain.trip.validation.common.CommonTimeConstraint;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserGetRequest {
 
-    @NotNull(message ="이메일을 입력해주세요.")
-    @NotEmpty(message ="이메일을 입력해주세요.")
+
     @NotBlank(message ="이메일을 입력해주세요.")
-    @Email(message = "이메일을 입력해주세요.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$", message = "이메일 형식으로 입력해주세요.")
     private String email;
 }

@@ -3,6 +3,8 @@ package toy.five.triprecord.domain.trip.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import toy.five.triprecord.domain.jouney.entity.LodgmentJourney;
 import toy.five.triprecord.domain.jouney.entity.MoveJourney;
 import toy.five.triprecord.domain.jouney.entity.VisitJourney;
@@ -18,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@DynamicInsert
 public class Trip extends BaseTimeEntity {
 
     @Id
@@ -46,6 +49,9 @@ public class Trip extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column
     private Domestic domestic;
+
+    @ColumnDefault("0")
+    private Long likeCount;
 
     private void updateName(String name) {
         if (!name.isEmpty()) {

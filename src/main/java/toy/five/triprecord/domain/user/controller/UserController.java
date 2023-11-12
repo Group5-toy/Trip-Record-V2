@@ -3,11 +3,9 @@ package toy.five.triprecord.domain.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import toy.five.triprecord.domain.trip.dto.response.TripCreateResponse;
 import toy.five.triprecord.domain.user.dto.request.UserCreateRequest;
 import toy.five.triprecord.domain.user.dto.request.UserGetRequest;
 import toy.five.triprecord.domain.user.dto.request.UserPatchRequest;
@@ -44,7 +42,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
-        UserCreateResponse savedUser = userService.createTrip(userCreateRequest);
+        UserCreateResponse savedUser = userService.createUser(userCreateRequest);
         return ResponseEntity.ok(ApiResponse.builder()
                 .status(String.valueOf(StatusCode.SUCCESS))
                 .code(HttpStatus.OK.value())

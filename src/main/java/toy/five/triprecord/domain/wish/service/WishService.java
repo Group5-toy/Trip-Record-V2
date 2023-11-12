@@ -22,9 +22,12 @@ public class WishService {
     private final TripRepository tripRepository;
 
     @Transactional
-    public void saveWish(Long userId, Long tripId) {
+    public long saveWish(Long userId, Long tripId) {
         User findUser = findUserById(userId);
         Trip findTrip = findTripById(tripId);
+
+        if(isExistWishByUserAndTrip(findUser, findTrip)) 
+            throw new BaseException(ALREADY_WISH);
 
         Wish wish = Wish.builder()
                 .user(findUser)
@@ -32,15 +35,19 @@ public class WishService {
                 .build();
 
         wishRepository.save(wish);
-        findTrip.plusWishCount();
+        return findTrip.plusWishCount();
     }
 
     @Transactional
-    public void deleteWish(Long userId, Long tripId) {
-        wishRepository.findByUserAndTrip(
-                findUserById(userId),
-                findTripById(tripId)
-        ).orElseThrow(() -> new BaseException(LIKE_NO_EXIST));
+    public long deleteWish(Long userId, Long tripId) {
+        User findUser = findUserById(userId);
+        Trip findTrip = findTripById(tripId);
+
+        Wish findWish = wishRepository.findByUserAndTrip(findUser, findTrip)
+                .orElseThrow(() -> new BaseException(LIKE_NO_EXIST));
+
+        wishRepository.delete(findWish);
+        return findTrip.minusWishCount();
     }
 
     private User findUserById(Long userId) {
@@ -51,5 +58,9 @@ public class WishService {
     private Trip findTripById(Long tripId) {
         return tripRepository.findById(tripId)
                 .orElseThrow(() -> new BaseException(TRIP_NO_EXIST));
+    }
+
+    private boolean isExistWishByUserAndTrip(User user, Trip trip) {
+        return wishRepository.existsByUserAndTrip(user, trip);
     }
 }

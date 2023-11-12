@@ -81,8 +81,14 @@ public class Trip extends BaseTimeEntity {
         }
     }
 
-    public void plusWishCount() {
+    public long plusWishCount() {
         this.wishCount++;
+        return this.wishCount;
+    }
+
+    public long minusWishCount() {
+        this.wishCount--;
+        return this.wishCount;
     }
 
     public void updateColumns(TripPatchRequest tripPatchRequest) {

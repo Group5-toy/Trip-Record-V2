@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
     Optional<Wish> findByUserAndTrip(User user, Trip trip);
+    boolean existsByUserAndTrip(User user, Trip trip);
 }

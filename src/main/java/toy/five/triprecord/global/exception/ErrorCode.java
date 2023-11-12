@@ -31,7 +31,8 @@ public enum ErrorCode {
     USER_COMMNON_PASSWORD_MISMATCH_ERROR(400,"패스워드는 대소문자 1개와 숫자를 포함한 6~10자리로 써주세요."),
 
     //Like
-    LIKE_NO_EXIST(400, "LIKE 정보를 찾을 수 없습니다.")
+    LIKE_NO_EXIST(400, "LIKE 정보를 찾을 수 없습니다."),
+    ALREADY_WISH(400, "해당 여행을 이미 좋아요를 한 상태입니다.")
 
     ;
 

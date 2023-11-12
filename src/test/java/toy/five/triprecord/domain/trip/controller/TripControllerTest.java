@@ -50,7 +50,7 @@ class TripControllerTest {
                     .endTime(LocalDateTime.of(2023, 1, 1, 0, 0))
                     .domestic(DOMESTIC)
                     .journeys(null)
-                    .likeCount(0L)
+                    .wishCount(0L)
                     .build();
 
     @Test

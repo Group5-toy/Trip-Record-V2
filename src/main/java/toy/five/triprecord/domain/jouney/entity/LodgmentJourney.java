@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import toy.five.triprecord.domain.jouney.dto.request.LodgmentJourneyUpdateRequest;
+import toy.five.triprecord.domain.jouney.dto.request.MoveJourneyUpdateRequest;
 import toy.five.triprecord.domain.trip.entity.Trip;
 
 
@@ -35,9 +36,19 @@ public class LodgmentJourney extends BaseJourney {
     private JourneyType type;
 
 
-    public void updateEntity(LodgmentJourneyUpdateRequest request) {
-        this.name = request.getName();
-        this.dormitoryName = request.getDormitoryName();
+    private void setUpdateName(String name) {
+        this.name = name;
+    }
+
+    private void setUpdateDormitoryName(String dormitoryName) {
+        this.dormitoryName = dormitoryName;
+    }
+
+    public void setUpdateColumns(LodgmentJourneyUpdateRequest lodgmentJourneyUpdateRequest) {
+        setUpdateName(lodgmentJourneyUpdateRequest.getName());
+        setUpdateDormitoryName(lodgmentJourneyUpdateRequest.getDormitoryName());
+        setUpdateStartTime(lodgmentJourneyUpdateRequest.getStartTime());
+        setUpdateEndTime(lodgmentJourneyUpdateRequest.getEndTime());
     }
 
 

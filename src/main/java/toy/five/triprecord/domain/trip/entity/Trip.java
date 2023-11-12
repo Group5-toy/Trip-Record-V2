@@ -3,6 +3,7 @@ package toy.five.triprecord.domain.trip.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import toy.five.triprecord.domain.comment.entity.Comment;
 import toy.five.triprecord.domain.jouney.entity.LodgmentJourney;
 import toy.five.triprecord.domain.jouney.entity.MoveJourney;
 import toy.five.triprecord.domain.jouney.entity.VisitJourney;
@@ -22,7 +23,6 @@ public class Trip extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @Column(length = 30)
@@ -36,6 +36,10 @@ public class Trip extends BaseTimeEntity {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL)
     private List<LodgmentJourney> lodgmentJourneys;
+
+    @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc") // 댓글 정렬
+    private List<Comment> comments;
 
     @Column
     private LocalDateTime startTime;

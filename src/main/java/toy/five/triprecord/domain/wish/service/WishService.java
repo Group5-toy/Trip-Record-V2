@@ -26,7 +26,7 @@ public class WishService {
         User findUser = findUserById(userId);
         Trip findTrip = findTripById(tripId);
 
-        if(isExistWishByUserAndTrip(findUser, findTrip)) 
+        if(isExistWishByUserAndTrip(findUser, findTrip))
             throw new BaseException(ALREADY_WISH);
 
         Wish wish = Wish.builder()

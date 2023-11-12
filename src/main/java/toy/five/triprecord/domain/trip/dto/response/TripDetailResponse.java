@@ -26,7 +26,7 @@ public class TripDetailResponse {
     @Enumerated(EnumType.STRING)
     private Domestic domestic;
     private List<JourneyDetailResponse> journeys;
-    private Long likeCount;
+    private Long wishCount;
 
     public static TripDetailResponse fromEntity(
             Trip trip,
@@ -39,7 +39,7 @@ public class TripDetailResponse {
                 .endTime(trip.getEndTime())
                 .domestic(trip.getDomestic())
                 .journeys(journeyResponses)
-                .likeCount(trip.getLikeCount())
+                .wishCount(trip.getWishCount())
                 .build();
     }
 }

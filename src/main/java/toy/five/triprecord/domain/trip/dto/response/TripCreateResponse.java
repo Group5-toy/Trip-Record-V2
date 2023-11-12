@@ -2,8 +2,6 @@ package toy.five.triprecord.domain.trip.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +31,7 @@ public class TripCreateResponse {
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .domestic(entity.getDomestic())
-                .likeCount(entity.getLikeCount())
+                .likeCount(entity.getWishCount())
                 .build();
     }
 

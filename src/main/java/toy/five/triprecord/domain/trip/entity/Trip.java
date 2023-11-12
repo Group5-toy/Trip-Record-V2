@@ -10,6 +10,7 @@ import toy.five.triprecord.domain.jouney.entity.MoveJourney;
 import toy.five.triprecord.domain.jouney.entity.VisitJourney;
 import toy.five.triprecord.domain.trip.dto.request.TripPatchRequest;
 import toy.five.triprecord.domain.trip.dto.request.TripUpdateRequest;
+import toy.five.triprecord.domain.user.entity.User;
 import toy.five.triprecord.global.common.BaseTimeEntity;
 
 import java.time.LocalDateTime;
@@ -25,8 +26,11 @@ public class Trip extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(length = 30)
     private String name;
@@ -51,7 +55,7 @@ public class Trip extends BaseTimeEntity {
     private Domestic domestic;
 
     @ColumnDefault("0")
-    private Long likeCount;
+    private Long wishCount;
 
     private void updateName(String name) {
         if (!name.isEmpty()) {
@@ -77,6 +81,9 @@ public class Trip extends BaseTimeEntity {
         }
     }
 
+    public void plusWishCount() {
+        this.wishCount++;
+    }
 
     public void updateColumns(TripPatchRequest tripPatchRequest) {
         updateName(tripPatchRequest.getName());

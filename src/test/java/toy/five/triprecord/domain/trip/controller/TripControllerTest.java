@@ -87,7 +87,6 @@ class TripControllerTest {
                 .andExpect(jsonPath("$.data.name").value(defaultTripResponse.getName()))
                 .andExpect(jsonPath("$.data.domestic").value(String.valueOf(defaultTripResponse.getDomestic())))
                 .andExpect(jsonPath("$.data.like_count").value(0L));
-
     }
 
 }

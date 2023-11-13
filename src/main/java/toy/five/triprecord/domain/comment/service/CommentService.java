@@ -31,7 +31,7 @@ public class CommentService {
     public Long save(Long tripId, String nickname, CommentRequest request) {
         User user = userRepository.findByName(nickname);
         Trip trip = tripRepository.findById(tripId).orElseThrow(() ->
-            new IllegalArgumentException("댓글 쓰기 실패: 해당 여행이 존재하지 않습니다. " + tripId));
+            new BaseException(ErrorCode.TRIP_NO_EXIST));
 
         Comment newComment = Comment.builder()
             .comment(request.getComment())

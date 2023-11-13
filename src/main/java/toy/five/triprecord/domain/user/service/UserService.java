@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toy.five.triprecord.domain.trip.entity.Trip;
 import toy.five.triprecord.domain.user.dto.request.UserCreateRequest;
-import toy.five.triprecord.domain.user.dto.request.UserGetRequest;
 import toy.five.triprecord.domain.user.dto.request.UserPatchRequest;
 import toy.five.triprecord.domain.user.dto.request.UserUpdateReqeust;
 import toy.five.triprecord.domain.user.dto.response.UserCreateResponse;
@@ -17,8 +15,6 @@ import toy.five.triprecord.domain.user.entity.User;
 import toy.five.triprecord.domain.user.repository.UserRepository;
 import toy.five.triprecord.global.exception.BaseException;
 import toy.five.triprecord.global.exception.ErrorCode;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +34,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserCreateResponse createTrip(UserCreateRequest userCreateRequest) {
+    public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
 
         if (userRepository.existsByEmail(userCreateRequest.getEmail())) {
             throw new BaseException(ErrorCode.USER_EMAIL_DUPULICATE_ERROR);

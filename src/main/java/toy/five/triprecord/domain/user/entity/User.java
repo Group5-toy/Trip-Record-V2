@@ -7,16 +7,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import toy.five.triprecord.domain.user.dto.request.UserPatchRequest;
 import toy.five.triprecord.domain.user.dto.request.UserUpdateReqeust;
 import toy.five.triprecord.global.common.BaseTimeEntity;
+
+import java.util.Collection;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User extends BaseTimeEntity {
+public class User extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +34,6 @@ public class User extends BaseTimeEntity {
 
     @Column
     private String name;
-    
     
 
     
@@ -65,6 +68,39 @@ public class User extends BaseTimeEntity {
     }
 
 
+    // TODO: 권한내용 반환
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
 
+    // username 반환
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
+    // 계정 만료 확인
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    // 계정 잠김 확인
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    // 인증정보 만료 확인
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    // 계정 활성화 확인
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

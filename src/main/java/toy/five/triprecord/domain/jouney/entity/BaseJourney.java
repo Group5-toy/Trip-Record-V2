@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import toy.five.triprecord.global.common.BaseTimeEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
@@ -25,4 +24,13 @@ public class BaseJourney extends BaseTimeEntity {
 
     @Column
     private LocalDateTime endTime;
+
+    protected void setUpdateStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    protected void setUpdateEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
 }

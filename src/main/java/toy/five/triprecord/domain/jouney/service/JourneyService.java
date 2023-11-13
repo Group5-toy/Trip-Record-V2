@@ -55,7 +55,7 @@ public class JourneyService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse> getAllJourneysByTripId(Long tripId) {
+    public List<JourneyDetailResponse> getAllJourneysByTripId(Long tripId) {
 
         List<JourneyDetailResponse> journeyResponses = new ArrayList<>();
 
@@ -68,21 +68,15 @@ public class JourneyService {
 
         journeyResponses.sort(Comparator.comparing(JourneyDetailResponse::getStartTime));
 
-        return ResponseEntity.ok(
-                ApiResponse.builder()
-                        .status("Success")
-                        .code(HttpStatus.OK.value())
-                        .data(journeyResponses)
-                        .build());
+        return journeyResponses;
     }
 
-    private Trip findTripById(Long tripId) {
-        return tripRepository.findById(tripId)
-                .orElseThrow(() -> new BaseException(TRIP_NO_EXIST));
+    private Optional<Trip> findTripById(Long tripId) {
+        return tripRepository.findById(tripId);
     }
     
     @Transactional
-    public ResponseEntity<ApiResponse> saveJourneys(Long tripId, JourneyCreateRequest request) {
+    public JourneyCreateResponse saveJourneys(Long tripId, JourneyCreateRequest request) {
 
         List<MoveJourneyCreateRequest> moveJourneyDtos = request.getMoves();//이동
         List<LodgmentJourneyCreateRequest> lodgmentJourneyDtos = request.getLodgments();//숙박
@@ -110,59 +104,45 @@ public class JourneyService {
         List<VisitJourneyCreateResponse> visitJourneyCreateResponses =
                 savedVisitJourneys.stream().map(VisitJourneyCreateResponse::fromEntity).toList();
 
-        JourneyCreateResponse journeyCreateResponse = JourneyCreateResponse.of(
+        return JourneyCreateResponse.of(
                 moveJourneyCreateResponses,
                 visitJourneyCreateResponses,
                 lodgmentJourneyCreateResponses
         );
 
-        return ResponseEntity.ok(ApiResponse.builder().status("Success").code(HttpStatus.OK.value()).data(journeyCreateResponse).build());
-
 
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> modifyMoveJourney (
+    public MoveJourneyUpdateResponse modifyMoveJourney (
             Long journeyId,
             MoveJourneyUpdateRequest updateRequest
     ){
         MoveJourney findJourney = moveJourneyRepository.findById(journeyId)
                 .orElseThrow(() -> new BaseException(JOURNEY_NO_EXIST));
 
-        findJourney.setName(updateRequest.getName());
-        findJourney.setVehicle(updateRequest.getVehicle());
-        findJourney.setStartPoint(updateRequest.getStartPoint());
-        findJourney.setEndPoint(updateRequest.getEndPoint());
-        findJourney.setStartTime(updateRequest.getStartTime());
-        findJourney.setEndTime(updateRequest.getEndTime());
+        findJourney.setUpdateColumns(updateRequest);
 
-        MoveJourneyUpdateResponse moveJourneyUpdateResponse = MoveJourneyUpdateResponse.fromEntity(findJourney);
-
-        return ResponseEntity.ok(ApiResponse.builder().status("Success").code(HttpStatus.OK.value()).data(moveJourneyUpdateResponse).build());
+        return MoveJourneyUpdateResponse.fromEntity(findJourney);
 
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> modifyLodgmentJourney (
+    public LodgmentJourneyUpdateResponse modifyLodgmentJourney (
             Long journeyId,
             LodgmentJourneyUpdateRequest updateRequest
     ){
         LodgmentJourney findJourney = lodgmentJourneyRepository.findById(journeyId)
                 .orElseThrow(() -> new BaseException(JOURNEY_NO_EXIST));
 
-        findJourney.setName(updateRequest.getName());
-        findJourney.setDormitoryName(updateRequest.getDormitoryName());
-        findJourney.setStartTime(updateRequest.getStartTime());
-        findJourney.setEndTime(updateRequest.getEndTime());
+        findJourney.setUpdateColumns(updateRequest);
 
-        LodgmentJourneyUpdateResponse lodgmentJourneyUpdateResponse = LodgmentJourneyUpdateResponse.fromEntity(findJourney);
-
-        return ResponseEntity.ok(ApiResponse.builder().status("Success").code(HttpStatus.OK.value()).data(lodgmentJourneyUpdateResponse).build());
+        return LodgmentJourneyUpdateResponse.fromEntity(findJourney);
 
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> modifyVisitJourney (
+    public VisitJourneyUpdateResponse modifyVisitJourney (
             Long journeyId,
             VisitJourneyUpdateRequest updateRequest
     ){
@@ -171,14 +151,9 @@ public class JourneyService {
         VisitJourney findJourney = visitJourneyRepository.findById(journeyId)
                 .orElseThrow(() -> new BaseException(JOURNEY_NO_EXIST));
 
-        findJourney.setName(updateRequest.getName());
-        findJourney.setLocation(updateRequest.getLocation());
-        findJourney.setStartTime(updateRequest.getStartTime());
-        findJourney.setEndTime(updateRequest.getEndTime());
+        findJourney.setUpdateColumns(updateRequest);
 
-        VisitJourneyUpdateResponse visitJourneyUpdateResponse = VisitJourneyUpdateResponse.fromEntity(findJourney);
-
-        return ResponseEntity.ok(ApiResponse.builder().status("Success").code(HttpStatus.OK.value()).data(visitJourneyUpdateResponse).build());
+        return VisitJourneyUpdateResponse.fromEntity(findJourney);
 
     }
 
@@ -188,7 +163,8 @@ public class JourneyService {
                         .orElseGet(Collections::emptyList)
                         .stream().map(journeyRequest ->
                         VisitJourney.builder()
-                                .trip(findTripById(tripId))
+                                .trip(findTripById(tripId)
+                                        .orElseThrow(() -> new BaseException(TRIP_NO_EXIST)))
                                 .name(journeyRequest.getName())
                                 .location(journeyRequest.getLocation())
                                 .type(journeyRequest.getType())
@@ -205,7 +181,8 @@ public class JourneyService {
                         .orElseGet(Collections::emptyList)
                         .stream().map(journeyRequest ->
                         LodgmentJourney.builder()
-                                .trip(findTripById(tripId))
+                                .trip(findTripById(tripId)
+                                        .orElseThrow(() -> new BaseException(TRIP_NO_EXIST)))
                                 .name(journeyRequest.getName())
                                 .dormitoryName(journeyRequest.getDormitoryName())
                                 .type(journeyRequest.getType())
@@ -222,7 +199,8 @@ public class JourneyService {
                         .orElseGet(Collections::emptyList)
                         .stream().map(journeyRequest ->
                                 MoveJourney.builder()
-                                    .trip(findTripById(tripId))
+                                    .trip(findTripById(tripId)
+                                            .orElseThrow(() -> new BaseException(TRIP_NO_EXIST)))
                                     .name(journeyRequest.getName())
                                     .vehicle(journeyRequest.getVehicle())
                                     .startPoint(journeyRequest.getStartPoint())

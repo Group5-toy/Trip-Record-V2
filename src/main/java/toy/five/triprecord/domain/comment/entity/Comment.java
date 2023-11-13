@@ -1,10 +1,13 @@
 package toy.five.triprecord.domain.comment.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import toy.five.triprecord.domain.trip.entity.Trip;
 import toy.five.triprecord.domain.user.entity.User;
 import toy.five.triprecord.global.common.BaseTimeEntity;
@@ -19,8 +22,17 @@ public class Comment extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     private String comment; // 댓글 내용
+
+    @Column(name = "created_date")
+    @CreatedDate
+    private String createdDate;
+
+    @Column(name = "modified_date")
+    @LastModifiedDate
+    private String modifiedDate;
 
     @ManyToOne
     @JoinColumn(name = "trip_id")
@@ -29,4 +41,8 @@ public class Comment extends BaseTimeEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user; // 작성자
+
+    public void update(String comment) {
+        this.comment = comment;
+    }
 }

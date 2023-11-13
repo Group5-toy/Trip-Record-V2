@@ -32,7 +32,10 @@ public enum ErrorCode {
 
     //Like
     LIKE_NO_EXIST(400, "해당 여행을 좋아요하지 않은 상태입니다."),
-    ALREADY_WISH(400, "해당 여행을 이미 좋아요를 한 상태입니다.")
+    ALREADY_WISH(400, "해당 여행을 이미 좋아요를 한 상태입니다."),
+
+    //Comment
+    COMMENT_NO_EXIST(400, "해당 댓글이 존재하지 않습니다.")
 
     ;
 

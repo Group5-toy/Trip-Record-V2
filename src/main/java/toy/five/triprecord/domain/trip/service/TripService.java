@@ -19,9 +19,7 @@ import toy.five.triprecord.domain.trip.validation.patch.TripPatchTimeValidatorUt
 import toy.five.triprecord.global.exception.BaseException;
 import toy.five.triprecord.global.exception.ErrorCode;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static toy.five.triprecord.global.exception.ErrorCode.TRIP_NO_EXIST;
 
@@ -55,12 +53,12 @@ public class TripService {
     private List<JourneyDetailResponse> getJourneysFromTripBySorted(Trip findTrip) {
         List<JourneyDetailResponse> journeyResponses = new ArrayList<>();
 
-        findTrip.getMoveJourneys().stream()
-                .map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
-        findTrip.getLodgmentJourneys().stream()
-                .map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
-        findTrip.getVisitJourneys().stream()
-                .map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
+        Optional.ofNullable(findTrip.getMoveJourneys()).orElseGet(Collections::emptyList)
+                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
+        Optional.ofNullable(findTrip.getLodgmentJourneys()).orElseGet(Collections::emptyList)
+                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
+        Optional.ofNullable(findTrip.getVisitJourneys()).orElseGet(Collections::emptyList)
+                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
 
         journeyResponses.sort(Comparator.comparing(JourneyDetailResponse::getStartTime));
 

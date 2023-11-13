@@ -22,7 +22,7 @@ public class TripCreateResponse {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Domestic domestic;
-    private Long likeCount;
+    private Long wishCount;
 
     public static TripCreateResponse fromEntity(Trip entity) {
         return TripCreateResponse.builder()
@@ -31,7 +31,7 @@ public class TripCreateResponse {
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .domestic(entity.getDomestic())
-                .likeCount(entity.getWishCount())
+                .wishCount(entity.getWishCount())
                 .build();
     }
 

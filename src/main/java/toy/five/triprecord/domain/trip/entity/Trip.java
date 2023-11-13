@@ -105,13 +105,9 @@ public class Trip extends BaseTimeEntity {
         updateIsDomestic(tripUpdateRequest.getDomestic());
     }
 
-
-
-
-
-
-
-
-
+    @PrePersist
+    public void prePersist() {
+        this.wishCount = this.wishCount == null ? 0 : this.wishCount;
+    }
 
 }

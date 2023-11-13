@@ -47,17 +47,6 @@ public class UserController {
                 .build());
     }
 
-    @PostMapping("/login-user")
-    public ResponseEntity<ApiResponse> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest) {
-        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
-
-        return ResponseEntity.ok(ApiResponse.builder()
-                .status(String.valueOf(StatusCode.SUCCESS))
-                .code(HttpStatus.OK.value())
-                .data(userLoginResponse)
-                .build());
-    }
-
 
     @PutMapping("/all-update-user")
     public ResponseEntity<ApiResponse> updateUser(@Valid @RequestBody UserUpdateReqeust userUpdateReqeust) {

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toy.five.triprecord.domain.comment.dto.request.CommentRequest;
 import toy.five.triprecord.domain.comment.service.CommentService;
+import toy.five.triprecord.global.common.StatusCode;
 import toy.five.triprecord.global.exception.ApiResponse;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class CommentController {
 
         return ResponseEntity.ok(
             ApiResponse.builder()
-                .status("Success")
+                .status(String.valueOf(StatusCode.SUCCESS))
                 .code(HttpStatus.OK.value())
                 .data(commentService.save(tripId, "nickname", request))
                 .build()
@@ -38,7 +39,7 @@ public class CommentController {
 
         return ResponseEntity.ok(
             ApiResponse.builder()
-                .status("Success")
+                .status(String.valueOf(StatusCode.SUCCESS))
                 .code(HttpStatus.OK.value())
                 .data(commentService.findAll(tripId))
                 .build()
@@ -53,7 +54,7 @@ public class CommentController {
 
         return ResponseEntity.ok(
             ApiResponse.builder()
-                .status("Success")
+                .status(String.valueOf(StatusCode.SUCCESS))
                 .code(HttpStatus.OK.value())
                 .data(id)
                 .build()
@@ -66,7 +67,7 @@ public class CommentController {
 
         return ResponseEntity.ok(
             ApiResponse.builder()
-                .status("Success")
+                .status(String.valueOf(StatusCode.SUCCESS))
                 .code(HttpStatus.OK.value())
                 .data(id)
                 .build()

@@ -22,10 +22,6 @@ public class CommentRequest {
 
     private Long id;
     private String comment;
-    private String createdDate = LocalDateTime.now()
-        .format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-    private String modifiedDate = LocalDateTime.now()
-        .format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     private User user;
     private Trip trip;
 

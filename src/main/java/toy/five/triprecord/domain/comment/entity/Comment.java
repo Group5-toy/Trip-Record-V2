@@ -26,14 +26,6 @@ public class Comment extends BaseTimeEntity{
     @Column(columnDefinition = "TEXT")
     private String comment; // 댓글 내용
 
-    @Column(name = "created_date")
-    @CreatedDate
-    private String createdDate;
-
-    @Column(name = "modified_date")
-    @LastModifiedDate
-    private String modifiedDate;
-
     @ManyToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;

@@ -35,8 +35,6 @@ public class CommentService {
 
         Comment newComment = Comment.builder()
             .comment(request.getComment())
-            .createdDate(request.getCreatedDate())
-            .modifiedDate(request.getModifiedDate())
             .user(user)
             .trip(trip)
             .build();

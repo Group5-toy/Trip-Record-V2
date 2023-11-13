@@ -21,10 +21,8 @@ public class CommentResponse {
     private Long id;
     private String comment;
     private String nickname;
-    private String createdDate = LocalDateTime.now()
-        .format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-    private String modifiedDate = LocalDateTime.now()
-        .format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     private Long userId;
     private Long tripId;
 
@@ -32,8 +30,8 @@ public class CommentResponse {
         return CommentResponse.builder()
             .id(comment.getId())
             .comment(comment.getComment())
-            .createdDate(comment.getCreatedDate())
-            .modifiedDate(comment.getModifiedDate())
+            .createdAt(comment.getCreatedAt())
+            .modifiedAt(comment.getModifiedAt())
             .nickname(comment.getUser().getName())
             .userId(comment.getUser().getId())
             .tripId(comment.getTrip().getId())

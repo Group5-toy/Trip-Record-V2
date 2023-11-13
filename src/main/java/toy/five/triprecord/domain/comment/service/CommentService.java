@@ -12,6 +12,8 @@ import toy.five.triprecord.domain.trip.entity.Trip;
 import toy.five.triprecord.domain.trip.repository.TripRepository;
 import toy.five.triprecord.domain.user.entity.User;
 import toy.five.triprecord.domain.user.repository.UserRepository;
+import toy.five.triprecord.global.exception.BaseException;
+import toy.five.triprecord.global.exception.ErrorCode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,8 +48,9 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponse> findAll(Long tripId) {
         Trip trip = tripRepository.findById(tripId).orElseThrow(() ->
-            new IllegalArgumentException("해당 여행이 존재하지 않습니다. id: " + tripId));
+            new BaseException(ErrorCode.TRIP_NO_EXIST));
         List<Comment> comments = trip.getComments();
+
         return comments.stream().map(CommentResponse::fromEntity)
             .collect(Collectors.toList());
     }
@@ -55,7 +58,7 @@ public class CommentService {
     @Transactional
     public void update(Long tripId, Long id, CommentRequest request) {
         Comment comment = commentRepository.findByTripIdAndId(tripId, id).orElseThrow(() ->
-            new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + id));
+            new BaseException(ErrorCode.COMMENT_NO_EXIST));
 
         comment.update(request.getComment());
     }
@@ -63,7 +66,7 @@ public class CommentService {
     @Transactional
     public void delete(Long tripId, Long id) {
         Comment comment = commentRepository.findByTripIdAndId(tripId, id).orElseThrow(() ->
-            new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id: " + id));
+            new BaseException(ErrorCode.COMMENT_NO_EXIST));
 
         commentRepository.delete(comment);
     }

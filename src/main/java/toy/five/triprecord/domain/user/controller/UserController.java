@@ -11,6 +11,11 @@ import toy.five.triprecord.domain.user.dto.response.*;
 import toy.five.triprecord.domain.user.service.UserService;
 import toy.five.triprecord.global.common.StatusCode;
 import toy.five.triprecord.global.exception.ApiResponse;
+import toy.five.triprecord.global.security.repository.TokenRepository;
+import toy.five.triprecord.global.security.entity.RefreshToken;
+import toy.five.triprecord.global.security.service.JwtTokenService;
+
+import java.util.List;
 
 
 @Slf4j
@@ -20,8 +25,9 @@ import toy.five.triprecord.global.exception.ApiResponse;
 public class UserController {
 
     private final UserService userService;
-    //private UserSecurityService userSecurityService;
-//    private JwtUtil jwtUtil;
+    private final JwtTokenService jwtTokenService;
+    private final TokenRepository tokenRepository;
+
 
     @GetMapping("/find-user")
     public ResponseEntity<ApiResponse> getUser(@Valid @RequestBody UserGetRequest userGetRequest) {
@@ -46,6 +52,20 @@ public class UserController {
                 .data(savedUser)
                 .build());
     }
+
+    @PostMapping("login-user")
+    public ResponseEntity<ApiResponse> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
+        List<String> tokens = jwtTokenService.generateToken(userLoginRequest);
+        tokenRepository.save(new RefreshToken(userLoginRequest.getEmail(),tokens.get(1)));
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(String.valueOf(StatusCode.SUCCESS))
+                .code(HttpStatus.OK.value())
+                .data(tokens.get(0))
+                .build());
+    }
+
+
 
 
     @PutMapping("/all-update-user")

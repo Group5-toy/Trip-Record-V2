@@ -29,11 +29,15 @@ public enum ErrorCode {
     USER_CAN_NOT_FIND_EMAIL(400,"조회하고자 하는 정보가 없습니다."),
     USER_EMAIL_DUPULICATE_ERROR(400,"이미 사용중인 이메일입니다."),
     USER_COMMNON_PASSWORD_MISMATCH_ERROR(400,"패스워드는 대소문자 1개와 숫자를 포함한 6~10자리로 써주세요."),
+    USER_NO_APPROVE_ERROR(403,"인증에 실패했습니다."),
+
 
     //Like
     LIKE_NO_EXIST(400, "해당 여행을 좋아요하지 않은 상태입니다."),
-    ALREADY_WISH(400, "해당 여행을 이미 좋아요를 한 상태입니다.")
+    ALREADY_WISH(400, "해당 여행을 이미 좋아요를 한 상태입니다."),
 
+    //Security
+    REFRESH_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
     ;
 
     private final int statusCode;

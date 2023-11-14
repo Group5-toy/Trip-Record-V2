@@ -3,7 +3,9 @@ package toy.five.triprecord.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toy.five.triprecord.domain.user.dto.request.UserCreateRequest;
@@ -21,8 +23,7 @@ import toy.five.triprecord.global.exception.ErrorCode;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
 
 
     @Transactional(readOnly = true)
@@ -44,11 +45,11 @@ public class UserService {
             throw new BaseException(ErrorCode.USER_EMAIL_DUPULICATE_ERROR);
         }
 
-        System.out.println(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
+        System.out.println(passwordEncoder.encode(userCreateRequest.getPassword()));
 
         User newUser = User.builder()
                 .email(userCreateRequest.getEmail())
-                .password(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()))
+                .password(passwordEncoder.encode(userCreateRequest.getPassword()))
                 .name(userCreateRequest.getName())
                 .build();
 
@@ -61,6 +62,9 @@ public class UserService {
         User existedUser = userRepository.findByEmail(userUpdateReqeust.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_CAN_NOT_FIND_EMAIL));
 
+        userUpdateReqeust.setPassword(passwordEncoder.encode(userUpdateReqeust.getPassword()));
+
+
         existedUser.setUpdateColumns(userUpdateReqeust);
 
         return UserUpdateResponse.fromEntity(existedUser);
@@ -72,6 +76,9 @@ public class UserService {
         User existedUser = userRepository.findByEmail(userPatchRequest.getEmail())
                 .orElseThrow(() -> new BaseException((ErrorCode.USER_CAN_NOT_FIND_EMAIL)));
 
+        if (!StringUtils.isBlank(userPatchRequest.getPassword())) {
+            userPatchRequest.setPassword(passwordEncoder.encode(userPatchRequest.getPassword()));
+        }
         existedUser.setPatchColumns(userPatchRequest);
 
         return UserPatchResponse.fromEntity(existedUser);

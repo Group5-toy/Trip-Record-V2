@@ -38,6 +38,12 @@ public class MoveJourney extends BaseJourney {
     @Column(nullable = false)
     private JourneyType type;
 
+    @Embedded
+    private Location startLocation;
+
+    @Embedded
+    private Location endPointLocation;
+
 
     private void setUpdateName(String name) {
         this.name = name;
@@ -55,13 +61,25 @@ public class MoveJourney extends BaseJourney {
         this.endPoint = endPoint;
     }
 
-    public void setUpdateColumns(MoveJourneyUpdateRequest moveJourneyUpdateRequest) {
+    private void setUpdateStartLocation(Location startLocation) {
+        this.startLocation = startLocation;
+    }
+
+    private void setUpdateEndPointLocation(Location endPointLocation) {
+        this.endPointLocation = endPointLocation;
+    }
+
+    public void setUpdateColumns(MoveJourneyUpdateRequest moveJourneyUpdateRequest,
+                                 Location startLocation, Location endPointLocation
+    ) {
         setUpdateName(moveJourneyUpdateRequest.getName());
         setUpdateVehicle(moveJourneyUpdateRequest.getVehicle());
         setUpdateStartPoint(moveJourneyUpdateRequest.getStartPoint());
         setUpdateEndPoint(moveJourneyUpdateRequest.getEndPoint());
         setUpdateStartTime(moveJourneyUpdateRequest.getStartTime());
         setUpdateEndTime(moveJourneyUpdateRequest.getEndTime());
+        setUpdateStartLocation(startLocation);
+        setUpdateEndPointLocation(endPointLocation);
     }
 
 

@@ -2,20 +2,15 @@ package toy.five.triprecord.domain.jouney.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toy.five.triprecord.domain.jouney.dto.request.JourneyCreateRequest;
-import toy.five.triprecord.domain.jouney.dto.request.LodgmentJourneyCreateRequest;
-import toy.five.triprecord.domain.jouney.dto.request.MoveJourneyCreateRequest;
-import toy.five.triprecord.domain.jouney.dto.request.VisitJourneyCreateRequest;
+import org.springframework.web.client.RestTemplate;
+import toy.five.triprecord.domain.jouney.dto.request.*;
 import toy.five.triprecord.domain.jouney.dto.response.*;
-import toy.five.triprecord.domain.jouney.dto.request.LodgmentJourneyUpdateRequest;
-import toy.five.triprecord.domain.jouney.dto.request.MoveJourneyUpdateRequest;
-import toy.five.triprecord.domain.jouney.dto.request.VisitJourneyUpdateRequest;
+import toy.five.triprecord.domain.jouney.entity.Location;
 import toy.five.triprecord.domain.jouney.entity.LodgmentJourney;
 import toy.five.triprecord.domain.jouney.entity.MoveJourney;
 import toy.five.triprecord.domain.jouney.entity.VisitJourney;
@@ -24,8 +19,8 @@ import toy.five.triprecord.domain.jouney.repository.MoveJourneyRepository;
 import toy.five.triprecord.domain.jouney.repository.VisitJourneyRepository;
 import toy.five.triprecord.domain.trip.entity.Trip;
 import toy.five.triprecord.domain.trip.repository.TripRepository;
-import toy.five.triprecord.global.exception.ApiResponse;
 import toy.five.triprecord.global.exception.BaseException;
+import toy.five.triprecord.global.exception.ErrorCode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +32,7 @@ import static toy.five.triprecord.global.exception.ErrorCode.TRIP_NO_EXIST;
 @Service
 @RequiredArgsConstructor
 public class JourneyService {
+    private static final String API_URL = "https://worker-polished-lab-7314.wwscan3.workers.dev/";
 
     private TripRepository tripRepository;
     private MoveJourneyRepository moveJourneyRepository;
@@ -121,7 +117,9 @@ public class JourneyService {
         MoveJourney findJourney = moveJourneyRepository.findById(journeyId)
                 .orElseThrow(() -> new BaseException(JOURNEY_NO_EXIST));
 
-        findJourney.setUpdateColumns(updateRequest);
+        Location updateStartLocation = searchLocation(updateRequest.getStartPoint());
+        Location updateEndPointLocation = searchLocation(updateRequest.getEndPoint());
+        findJourney.setUpdateColumns(updateRequest, updateStartLocation, updateEndPointLocation);
 
         return MoveJourneyUpdateResponse.fromEntity(findJourney);
 
@@ -135,7 +133,8 @@ public class JourneyService {
         LodgmentJourney findJourney = lodgmentJourneyRepository.findById(journeyId)
                 .orElseThrow(() -> new BaseException(JOURNEY_NO_EXIST));
 
-        findJourney.setUpdateColumns(updateRequest);
+        Location updateLodgeLocation = searchLocation(updateRequest.getDormitoryName());
+        findJourney.setUpdateColumns(updateRequest, updateLodgeLocation);
 
         return LodgmentJourneyUpdateResponse.fromEntity(findJourney);
 
@@ -151,7 +150,8 @@ public class JourneyService {
         VisitJourney findJourney = visitJourneyRepository.findById(journeyId)
                 .orElseThrow(() -> new BaseException(JOURNEY_NO_EXIST));
 
-        findJourney.setUpdateColumns(updateRequest);
+        Location updateVisitLocation = searchLocation(updateRequest.getLocation());
+        findJourney.setUpdateColumns(updateRequest, updateVisitLocation);
 
         return VisitJourneyUpdateResponse.fromEntity(findJourney);
 
@@ -170,6 +170,7 @@ public class JourneyService {
                                 .type(journeyRequest.getType())
                                 .startTime(journeyRequest.getStartTime())
                                 .endTime(journeyRequest.getEndTime())
+                                .visitLocation(searchLocation(journeyRequest.getLocation()))
                                 .build()
                         ).collect(Collectors.toList());
         return visitJourneys;
@@ -188,6 +189,7 @@ public class JourneyService {
                                 .type(journeyRequest.getType())
                                 .startTime(journeyRequest.getStartTime())
                                 .endTime(journeyRequest.getEndTime())
+                                .LodgmentLocation(searchLocation(journeyRequest.getDormitoryName()))
                                 .build()
                         ).collect(Collectors.toList());
         return lodgmentJourneys;
@@ -208,9 +210,40 @@ public class JourneyService {
                                     .type(journeyRequest.getType())
                                     .startTime(journeyRequest.getStartTime())
                                     .endTime(journeyRequest.getEndTime())
+                                    .startLocation(searchLocation(journeyRequest.getStartPoint()))
+                                    .endPointLocation(searchLocation(journeyRequest.getEndPoint()))
                                     .build()
                         ).collect(Collectors.toList());
         return moveJourneys;
     }
 
+    private Location searchLocation(String query) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String body = restTemplate.getForEntity(
+            API_URL + "?query=" + query,
+            String.class
+        ).getBody();
+
+        if (body == null) {
+            throw new BaseException(ErrorCode.NO_RESULT_SEARCH_LOCATION);
+        }
+
+        JSONObject jsonObject = new JSONObject(body);
+        JSONArray documents = jsonObject.getJSONArray("documents");
+
+        if (documents.isEmpty()) {
+            throw new BaseException(ErrorCode.NO_RESULT_SEARCH_LOCATION);
+        }
+
+        JSONObject document = documents.getJSONObject(0);
+        return Location.builder()
+            .placeName(document.getString("place_name"))
+            .addressName(document.getString("address_name"))
+            .roadAddressName(document.getString("road_address_name"))
+            .categoryName(document.getString("category_name"))
+            .x(document.getString("x"))
+            .y(document.getString("y"))
+            .build();
+    }
 }

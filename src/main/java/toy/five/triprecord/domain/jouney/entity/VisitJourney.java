@@ -3,7 +3,6 @@ package toy.five.triprecord.domain.jouney.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import toy.five.triprecord.domain.jouney.dto.request.MoveJourneyUpdateRequest;
 import toy.five.triprecord.domain.jouney.dto.request.VisitJourneyUpdateRequest;
 import toy.five.triprecord.domain.trip.entity.Trip;
 
@@ -33,6 +32,9 @@ public class VisitJourney extends BaseJourney {
     @Column(nullable = false)
     private JourneyType type;
 
+    @Embedded
+    private Location visitLocation;
+
     private void setUpdateName(String name) {
         this.name = name;
     }
@@ -41,11 +43,16 @@ public class VisitJourney extends BaseJourney {
         this.location = location;
     }
 
-    public void setUpdateColumns(VisitJourneyUpdateRequest visitJourneyUpdateRequest) {
+    private void setUpdateVisitLocation(Location visitLocation) {
+        this.visitLocation = visitLocation;
+    }
+
+    public void setUpdateColumns(VisitJourneyUpdateRequest visitJourneyUpdateRequest, Location visitLocation) {
         setUpdateName(visitJourneyUpdateRequest.getName());
         setUpdateLocation(visitJourneyUpdateRequest.getLocation());
         setUpdateStartTime(visitJourneyUpdateRequest.getStartTime());
         setUpdateEndTime(visitJourneyUpdateRequest.getEndTime());
+        setUpdateVisitLocation(visitLocation);
     }
 
 

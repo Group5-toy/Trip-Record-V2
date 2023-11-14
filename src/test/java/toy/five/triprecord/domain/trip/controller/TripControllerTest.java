@@ -70,7 +70,7 @@ class TripControllerTest {
                         .domestic(defaultTripResponse.getDomestic())
                         .startTime(defaultTripResponse.getStartTime())
                         .endTime(defaultTripResponse.getEndTime())
-                        .likeCount(0L)
+                        .wishCount(0L)
                         .build();
 
         given(tripService.createTrip(any(TripCreateRequest.class)))

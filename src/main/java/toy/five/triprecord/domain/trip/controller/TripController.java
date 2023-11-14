@@ -61,10 +61,6 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse> getAllTripsBySearch(@Valid @RequestBody TripSearchCond cond) {
-        log.info("TAG : {}", cond.getTripName());
-        log.info("TAG : {}", cond.getStartTime());
-        log.info("TAG : {}", cond.getEndTime());
-        log.info("TAG : {}", cond.getWishCount());
         return ResponseEntity.ok(
                 ApiResponse.builder()
                         .status("Success")

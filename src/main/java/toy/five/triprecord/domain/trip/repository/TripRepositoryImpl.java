@@ -26,10 +26,10 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .from(trip)
                 .where(
                         likeTripName(cond.getTripName()),
-                        greaterThanStartTime(cond.getStartTime()),
-                        lessThanEndTime(cond.getEndTime()),
-                        isDomesticOrNot(cond.getIsDomestic()),
-                        greaterThanWishCount(cond.getWishCount())
+                        greaterThanStartTime(cond.getMinStartTime()),
+                        lessThanEndTime(cond.getMaxEndTime()),
+                        isDomesticOrNot(cond.getDomestic()),
+                        greaterThanWishCount(cond.getMinWishCount())
                 )
                 .fetch();
     }

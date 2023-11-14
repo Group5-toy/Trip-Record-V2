@@ -1,20 +1,18 @@
-package toy.five.triprecord.domain.jouney.entity;
+package toy.five.triprecord.domain.jouney.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
+@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Location {
+public class LocationRequest {
 
     private String placeName;
     private String categoryName;
@@ -22,5 +20,4 @@ public class Location {
     private String roadAddressName;
     private String x;
     private String y;
-
 }

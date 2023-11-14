@@ -3,6 +3,7 @@ package toy.five.triprecord.domain.jouney.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import toy.five.triprecord.domain.jouney.dto.request.LocationRequest;
 import toy.five.triprecord.domain.jouney.dto.request.LodgmentJourneyUpdateRequest;
 import toy.five.triprecord.domain.trip.entity.Trip;
 
@@ -34,7 +35,7 @@ public class LodgmentJourney extends BaseJourney {
     private JourneyType type;
 
     @Embedded
-    private Location LodgmentLocation;
+    private Location lodgmentLocation;
 
     private void setUpdateName(String name) {
         this.name = name;
@@ -44,16 +45,22 @@ public class LodgmentJourney extends BaseJourney {
         this.dormitoryName = dormitoryName;
     }
 
-    private void setUpdateLodgeLocation(Location lodgmentLocation) {
-        this.LodgmentLocation = lodgmentLocation;
+    public void setUpdateLodgeLocation(LocationRequest lodgmentLocation) {
+        this.lodgmentLocation = Location.builder()
+            .placeName(lodgmentLocation.getPlaceName())
+            .x(lodgmentLocation.getX())
+            .y(lodgmentLocation.getY())
+            .roadAddressName(lodgmentLocation.getRoadAddressName())
+            .addressName(lodgmentLocation.getAddressName())
+            .categoryName(lodgmentLocation.getCategoryName())
+            .build();
     }
 
-    public void setUpdateColumns(LodgmentJourneyUpdateRequest lodgmentJourneyUpdateRequest, Location lodgeLocation) {
+    public void setUpdateColumns(LodgmentJourneyUpdateRequest lodgmentJourneyUpdateRequest) {
         setUpdateName(lodgmentJourneyUpdateRequest.getName());
         setUpdateDormitoryName(lodgmentJourneyUpdateRequest.getDormitoryName());
         setUpdateStartTime(lodgmentJourneyUpdateRequest.getStartTime());
         setUpdateEndTime(lodgmentJourneyUpdateRequest.getEndTime());
-        setUpdateLodgeLocation(lodgeLocation);
     }
 
 

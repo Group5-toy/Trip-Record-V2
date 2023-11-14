@@ -3,6 +3,7 @@ package toy.five.triprecord.domain.jouney.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import toy.five.triprecord.domain.jouney.dto.request.LocationRequest;
 import toy.five.triprecord.domain.jouney.dto.request.VisitJourneyUpdateRequest;
 import toy.five.triprecord.domain.trip.entity.Trip;
 
@@ -43,16 +44,22 @@ public class VisitJourney extends BaseJourney {
         this.location = location;
     }
 
-    private void setUpdateVisitLocation(Location visitLocation) {
-        this.visitLocation = visitLocation;
+    public void setUpdateVisitLocation(LocationRequest visitLocation) {
+        this.visitLocation = Location.builder()
+            .categoryName(visitLocation.getCategoryName())
+            .placeName(visitLocation.getPlaceName())
+            .addressName(visitLocation.getAddressName())
+            .x(visitLocation.getX())
+            .y(visitLocation.getY())
+            .roadAddressName(visitLocation.getRoadAddressName())
+            .build();
     }
 
-    public void setUpdateColumns(VisitJourneyUpdateRequest visitJourneyUpdateRequest, Location visitLocation) {
+    public void setUpdateColumns(VisitJourneyUpdateRequest visitJourneyUpdateRequest) {
         setUpdateName(visitJourneyUpdateRequest.getName());
         setUpdateLocation(visitJourneyUpdateRequest.getLocation());
         setUpdateStartTime(visitJourneyUpdateRequest.getStartTime());
         setUpdateEndTime(visitJourneyUpdateRequest.getEndTime());
-        setUpdateVisitLocation(visitLocation);
     }
 
 

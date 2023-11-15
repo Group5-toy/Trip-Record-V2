@@ -28,7 +28,7 @@ public class SecurityFilterConfig {
         http
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers("/", "/users/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/", "/users/entry-user","/users/login-user","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

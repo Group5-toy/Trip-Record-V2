@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import toy.five.triprecord.domain.trip.validation.common.CommonTimeConstraint;
 import toy.five.triprecord.domain.user.validation.common.PasswordConstraint;
 import toy.five.triprecord.domain.user.validation.patch.UserPatchConstraint;
+import toy.five.triprecord.domain.user.validation.patch.UserPatchPasswordConstraint;
 
 @Getter
 @AllArgsConstructor
@@ -26,8 +27,8 @@ public class UserPatchRequest {
     private String email;
 
 
-    @NotBlank(message ="비밀번호를 입력해주세요.")
-    @PasswordConstraint
+    //@NotBlank(message ="비밀번호를 입력해주세요.")
+    @UserPatchPasswordConstraint
     private String password;
 
     @NotBlank(message ="이름을 입력해주세요.")

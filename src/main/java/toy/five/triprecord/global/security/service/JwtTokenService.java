@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -32,12 +33,12 @@ public class JwtTokenService {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
+    @Value("${spring.jwt.secret}")
+    private String jwtSecret;
 
     private int accessTokenExpMinutes = 10;
     private int refreshTokenExpMinutes = 100;
 
-    // 비밀키 설정
-    private static final String SECRET_KEY = "SGWw9ffMeji1wWQub1WYx5VmIxEPg3uDDn3j0KTVQstPzqnR+HyCFIn0OAqTm5DJOymrtMNAmx0K5RPTxuMqPdDuUhDr+fu8ahKXnyny+Ll7IoOUtbQfGg3F/oJtKJRE4XLXz7BRMIIVDjTk+YJMYLojy/naao+Dt0otNWRkyneN2X4mbEcJrf2ad0Bf6iwdi5ZofAjLcW5lf1eD9gjGtFZ/sfHSEM1aZttAFuSSEReShyqOqIF1L971+2xdQw3rY2WA78fjxCMSUwQpQFdK9/bDf3706foywkWfta8lGoVA7y4rwE0uWMoMN+VpjbWBZ+RyysO0nFu8Rrivnb8XD31e12axFpdeh0tr2fbodFU=";
 
 
     public void authenticate(UserLoginRequest userLoginRequest) {
@@ -67,7 +68,6 @@ public class JwtTokenService {
      **/
 
     public List<String> generateToken(UserLoginRequest userLoginRequest) {
-        System.out.println("테스트2");
         // 로그인 요청에 대한 인증을 수행합니다.
         // 이 부분은 사용자의 아이디와 비밀번호를 확인하는 로직으로 구현해야 합니다.
         authenticate(userLoginRequest);
@@ -80,7 +80,6 @@ public class JwtTokenService {
 
     // Claim들 과 userdrtail로 토큰 생성하는 메서드
     public String generateAccessTokens(UserLoginRequest userLoginRequest) {
-        System.out.println("테스트3");
         // 액세스 토큰 생성
         String accessToken = Jwts.builder()
                 .setSubject(userLoginRequest.getEmail())
@@ -95,7 +94,7 @@ public class JwtTokenService {
     }
 
     public String generateRefreshTokens(UserLoginRequest userLoginRequest) {
-        System.out.println("테스트4");
+
         String refreshToken = Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpMinutes * 60 * 1000))  // 만료 시간 설정
@@ -189,7 +188,7 @@ public class JwtTokenService {
 
     private Key getSignInKey() {
         // 비밀키를 BASE64로 디코딩하여 바이트 배열로
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         // 디코딩된 바이트 배열을 이용해 HMAC-SHA 알고리즘에 사용될 Key 객체 생성
         // 실제 JWT토큰을 만드는데 사용되는 알고리즘에 키 값을 넣어 세팅하는 것이다.
         return Keys.hmacShaKeyFor(keyBytes);

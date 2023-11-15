@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +22,14 @@ import java.io.IOException;
 import java.util.Date;
 
 @RequiredArgsConstructor
-@Configuration
+@Component
 public class JwtFilterConfig extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
     private final UserDetailsService userDetailsService;
+    @Value("${spring.jwt.secret}")
+    private String jwtSecret;
+
 
     @Override
     protected void doFilterInternal(
@@ -50,7 +54,9 @@ public class JwtFilterConfig extends OncePerRequestFilter {
 
         // access토큰에서 Email뽑아 userDetail 가져오기
         String userEmail = Jwts.parser()
-                .parseClaimsJws(accessToken).getBody()
+                .setSigningKey(jwtSecret)  // 서명 키 지정
+                .parseClaimsJws(accessToken)
+                .getBody()
                 .getSubject();
         UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
@@ -78,4 +84,7 @@ public class JwtFilterConfig extends OncePerRequestFilter {
         // 다음 필터로
         filterChain.doFilter(request, response);
     }
+
+
+
 }

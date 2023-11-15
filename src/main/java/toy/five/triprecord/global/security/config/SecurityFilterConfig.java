@@ -28,7 +28,7 @@ public class SecurityFilterConfig {
         http
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers("/", "/users/**").permitAll()
+                                .requestMatchers("/", "/users/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
@@ -39,8 +39,6 @@ public class SecurityFilterConfig {
                 .authenticationProvider(authenticationProvider)
                 // JWT 관련 필터 추가
                 .addFilterBefore(jwtFilterConfig, UsernamePasswordAuthenticationFilter.class);
-
-
 
         return http.build();
     }

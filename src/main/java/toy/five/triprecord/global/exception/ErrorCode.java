@@ -38,6 +38,8 @@ public enum ErrorCode {
 
     //Security
     REFRESH_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
+    ACCESS_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
+    ALL_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
     ;
 
     private final int statusCode;

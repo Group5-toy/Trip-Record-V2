@@ -56,6 +56,7 @@ public class UserController {
     @PostMapping("login-user")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
         List<String> tokens = jwtTokenService.generateToken(userLoginRequest);
+        System.out.println("테스트1");
         tokenRepository.save(new RefreshToken(userLoginRequest.getEmail(),tokens.get(1)));
 
         return ResponseEntity.ok(ApiResponse.builder()
@@ -64,6 +65,19 @@ public class UserController {
                 .data(tokens.get(0))
                 .build());
     }
+
+    @PostMapping("entry-accesstoken")
+    public ResponseEntity<ApiResponse> entryAccessToken(@RequestBody UserLoginRequest userLoginRequest) {
+        String accessToken = jwtTokenService.generateAccessTokens(userLoginRequest);
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(String.valueOf(StatusCode.SUCCESS))
+                .code(HttpStatus.OK.value())
+                .data(accessToken)
+                .build());
+    }
+
+
 
 
 

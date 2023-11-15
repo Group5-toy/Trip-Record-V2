@@ -1,5 +1,6 @@
 package toy.five.triprecord.global.security.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
@@ -16,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import toy.five.triprecord.global.exception.ApiResponse;
+import toy.five.triprecord.global.exception.BaseException;
+import toy.five.triprecord.global.exception.ErrorCode;
 import toy.five.triprecord.global.security.service.JwtTokenService;
 
 import java.io.IOException;
@@ -29,6 +33,8 @@ public class JwtFilterConfig extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     @Value("${spring.jwt.secret}")
     private String jwtSecret;
+
+    private final ObjectMapper objectMapper;
 
 
     @Override
@@ -49,8 +55,28 @@ public class JwtFilterConfig extends OncePerRequestFilter {
         // 이제 토큰이 있다면 추출 ("Bearer " 이 부분 제외하고 7번 인덱스 부터 진짜 토큰 추출)
         String jwt = authHeader.substring(7);
 
-        // access토큰의 만료일 확인 및 유효한 accessToken 반환
-        String accessToken = jwtTokenService.accessTokenCheck(jwt);
+
+        String accessToken = null;
+        try {
+            // access토큰의 만료일 확인 및 유효한 accessToken 반환
+            accessToken = jwtTokenService.accessTokenCheck(jwt);
+        } catch (BaseException e) {
+            ErrorCode errorCode = e.getErrorCode();
+            String errorMessage = objectMapper.writeValueAsString(errorCode.getMessage());
+
+            // ApiResponse 객체 생성
+            ApiResponse<String> errorResponse = ApiResponse.fail(errorCode.getStatusCode(), errorCode.getMessage());
+
+            // ApiResponse 객체를 JSON 문자열로 변환
+            String errorResponseJson = objectMapper.writeValueAsString(errorResponse);
+
+            response.setStatus(errorCode.getStatusCode());
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(errorResponseJson);
+
+            return;
+        }
+
 
         // access토큰에서 Email뽑아 userDetail 가져오기
         String userEmail = Jwts.parser()

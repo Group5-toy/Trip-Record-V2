@@ -37,9 +37,8 @@ public enum ErrorCode {
     ALREADY_WISH(400, "해당 여행을 이미 좋아요를 한 상태입니다."),
 
     //Security
-    REFRESH_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
-    ACCESS_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
-    ALL_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
+    JWT_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
+
     ;
 
     private final int statusCode;

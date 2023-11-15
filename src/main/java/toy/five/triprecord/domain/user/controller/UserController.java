@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.builder()
                 .status(String.valueOf(StatusCode.SUCCESS))
                 .code(HttpStatus.OK.value())
-                .data(tokens.get(0))
+                .data("access토큰:"+ tokens.get(0)+System.lineSeparator()+"refresh 토큰 :"+tokens.get(1))
                 .build());
     }
 

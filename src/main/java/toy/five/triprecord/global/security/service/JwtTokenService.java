@@ -1,6 +1,7 @@
 package toy.five.triprecord.global.security.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -36,8 +37,8 @@ public class JwtTokenService {
     @Value("${spring.jwt.secret}")
     private String jwtSecret;
 
-    private int accessTokenExpMinutes = 10;
-    private int refreshTokenExpMinutes = 100;
+    private int accessTokenExpMinutes = 1;
+    private int refreshTokenExpMinutes = 1;
 
 
 
@@ -109,69 +110,20 @@ public class JwtTokenService {
 
 
     public String accessTokenCheck(String token) {
-        Claims accessClaims = extractAllClaims(token);
-        //억세스 토큰만 만료됐을때
-        if (accessClaims.getExpiration().before(new Date())) {
-            String email = accessClaims.getSubject();
-            RefreshToken refreshToken = tokenRepository.findByEmail(email)
-                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NO_EXIST));
-
-            Claims refreshClaims = Jwts.parser()
-                    .parseClaimsJws(refreshToken.getToken()).getBody();
-            Date expirationDate = refreshClaims.getExpiration();
-
-            //리프레쉬랑 억세스 둘 다 만료됐을때 -> 프론트에서 REFRESH_TOKEN_EXPIRED가 발생하면 로그인 login호출해라고 하는거
-            if (expirationDate.before(new Date())) {
-                throw new BaseException(ErrorCode.REFRESH_TOKEN_EXPIRED);
-            }
-            else {
-                //억세스토큰만 만료됐을때 -> 프론트에서 ACCESS_TOKEN_EXPIRED가 발생하면 억세스 토큰만 재발급하는 api 호출하라고 하는 거
-                throw new BaseException(ErrorCode.ACCESS_TOKEN_EXPIRED);
-            }
+        Claims accessClaims = null;
+        try {
+            accessClaims = extractAllClaims(token);
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(ErrorCode.JWT_TOKEN_EXPIRED);
         }
-        // 억세스토큰의 유효기간이 만료되지 않았을 때
-        else {
-            // 토큰을 그대로 반환하여 현재 세션을 계속 유지
-            return token;
-        }
+        return token;
     }
-  /**
-    public String accessTokenCheck(String token) {
-        Claims accessClaims = extractAllClaims(token);
 
-        if (accessClaims.getExpiration().before(new Date())) {
-            String email = accessClaims.getSubject();
-            RefreshToken refreshToken = tokenRepository.findByEmail(email)
-                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NO_EXIST));
-        } else{
-            String email = accessClaims.getSubject();
-            RefreshToken refreshToken = tokenRepository.findByEmail(email)
-                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NO_EXIST));
 
-            Claims refrestClaims = Jwts.parser()
-                    .parseClaimsJws(refreshToken.getToken()).getBody();
-            Date expirationDate = refrestClaims.getExpiration();
-
-            //리프레쉬랑 억세스 둘 다 만료됐을때
-            if (expirationDate.before(new Date())) {
-                throw new BaseException(ErrorCode.ALL_TOKEN_EXPIRED);
-            }
-            else {
-                //억세스토큰만 만료됐을떄
-                throw new BaseException(ErrorCode.REFRESH_TOKEN_EXPIRED);
-            }
-
-        }
-    }
-   **/
-
-    public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
-    }
 
     // 토큰안의 Claims 추출 메서드
     private Claims extractAllClaims(String token) {
-
+        //token payload 만료기간
         return Jwts
                 // JWT 토큰을 파싱(담긴 정보 분석)하기 위한 JwtParserBuilder 객체를 생성
                 .parserBuilder()

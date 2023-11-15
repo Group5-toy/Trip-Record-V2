@@ -33,6 +33,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.28'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.json:json:20210307'
 
 
 	// JWT 관련 의존성 (버전 똑같이 맞춰주자)

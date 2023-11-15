@@ -11,7 +11,9 @@ import toy.five.triprecord.domain.trip.entity.Domestic;
 import toy.five.triprecord.domain.trip.entity.Trip;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @AllArgsConstructor
@@ -38,7 +40,7 @@ public class TripDetailResponse {
                 .startTime(trip.getStartTime())
                 .endTime(trip.getEndTime())
                 .domestic(trip.getDomestic())
-                .journeys(journeyResponses)
+                .journeys(Optional.ofNullable(journeyResponses).orElseGet(Collections::emptyList))
                 .wishCount(trip.getWishCount())
                 .build();
     }

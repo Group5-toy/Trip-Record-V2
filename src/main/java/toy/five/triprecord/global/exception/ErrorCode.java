@@ -39,6 +39,12 @@ public enum ErrorCode {
     //Security
     JWT_TOKEN_EXPIRED(403,"인증이 만료되어 재로그인해주세요."),
 
+
+    //Comment
+    COMMENT_NO_EXIST(400, "해당 댓글이 존재하지 않습니다."),
+
+    //MAP
+    NO_RESULT_SEARCH_LOCATION(400, "해당 키워드에 대한 검색결과가 존재하지 않습니다.")
     ;
 
     private final int statusCode;

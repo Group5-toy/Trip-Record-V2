@@ -3,6 +3,7 @@ package toy.five.triprecord.domain.trip.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import toy.five.triprecord.domain.comment.entity.Comment;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import toy.five.triprecord.domain.jouney.entity.LodgmentJourney;
@@ -43,6 +44,10 @@ public class Trip extends BaseTimeEntity {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL)
     private List<LodgmentJourney> lodgmentJourneys;
+
+    @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc") // 댓글 정렬
+    private List<Comment> comments;
 
     @Column
     private LocalDateTime startTime;
@@ -105,13 +110,9 @@ public class Trip extends BaseTimeEntity {
         updateIsDomestic(tripUpdateRequest.getDomestic());
     }
 
-
-
-
-
-
-
-
-
+    @PrePersist
+    public void prePersist() {
+        this.wishCount = this.wishCount == null ? 0 : this.wishCount;
+    }
 
 }

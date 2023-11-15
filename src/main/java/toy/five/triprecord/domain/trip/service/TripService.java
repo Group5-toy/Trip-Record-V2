@@ -15,6 +15,7 @@ import toy.five.triprecord.domain.trip.dto.response.TripPatchResponse;
 import toy.five.triprecord.domain.trip.dto.response.TripUpdateResponse;
 import toy.five.triprecord.domain.trip.entity.Trip;
 import toy.five.triprecord.domain.trip.repository.TripRepository;
+import toy.five.triprecord.domain.trip.dto.request.TripSearchCond;
 import toy.five.triprecord.domain.trip.validation.patch.TripPatchTimeValidatorUtils;
 import toy.five.triprecord.global.exception.BaseException;
 import toy.five.triprecord.global.exception.ErrorCode;
@@ -46,28 +47,15 @@ public class TripService {
         return tripRepository.findAll(pageable).stream()
                 .map(
                         trip -> TripDetailResponse.fromEntity(trip, getJourneysFromTripBySorted(trip))
-                )
-                .toList();
+                ).toList();
     }
 
-    private List<JourneyDetailResponse> getJourneysFromTripBySorted(Trip findTrip) {
-        List<JourneyDetailResponse> journeyResponses = new ArrayList<>();
-
-        Optional.ofNullable(findTrip.getMoveJourneys()).orElseGet(Collections::emptyList)
-                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
-        Optional.ofNullable(findTrip.getLodgmentJourneys()).orElseGet(Collections::emptyList)
-                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
-        Optional.ofNullable(findTrip.getVisitJourneys()).orElseGet(Collections::emptyList)
-                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
-
-        journeyResponses.sort(Comparator.comparing(JourneyDetailResponse::getStartTime));
-
-        return journeyResponses;
-    }
-
-    private Trip findTripById(Long id) {
-        return tripRepository.findById(id)
-                .orElseThrow(() -> new BaseException(TRIP_NO_EXIST));
+    @Transactional(readOnly = true)
+    public List<TripDetailResponse> getAllTripsBySearchCond(TripSearchCond cond) {
+        return tripRepository.findAllBySearchCond(cond).stream()
+                .map(
+                        trip -> TripDetailResponse.fromEntity(trip, getJourneysFromTripBySorted(trip))
+                ).toList();
     }
 
     @Transactional
@@ -120,6 +108,26 @@ public class TripService {
 
         return TripPatchResponse.fromEntity(existingTrip);
 
+    }
+
+    private List<JourneyDetailResponse> getJourneysFromTripBySorted(Trip findTrip) {
+        List<JourneyDetailResponse> journeyResponses = new ArrayList<>();
+
+        Optional.ofNullable(findTrip.getMoveJourneys()).orElseGet(Collections::emptyList)
+                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
+        Optional.ofNullable(findTrip.getLodgmentJourneys()).orElseGet(Collections::emptyList)
+                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
+        Optional.ofNullable(findTrip.getVisitJourneys()).orElseGet(Collections::emptyList)
+                .stream().map(JourneyDetailResponse::fromEntity).forEach(journeyResponses::add);
+
+        journeyResponses.sort(Comparator.comparing(JourneyDetailResponse::getStartTime));
+
+        return journeyResponses;
+    }
+
+    private Trip findTripById(Long id) {
+        return tripRepository.findById(id)
+                .orElseThrow(() -> new BaseException(TRIP_NO_EXIST));
     }
 }
 

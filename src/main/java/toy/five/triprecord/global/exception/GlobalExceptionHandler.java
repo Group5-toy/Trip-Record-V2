@@ -11,7 +11,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static toy.five.triprecord.global.exception.ErrorCode.USER_PATCH_NO_PARAMETER_ERROR;
+import javax.naming.AuthenticationException;
+import java.nio.file.AccessDeniedException;
+
 import static toy.five.triprecord.global.exception.ValidationCode.*;
 @Slf4j
 @RestControllerAdvice
@@ -25,6 +27,9 @@ public class GlobalExceptionHandler {
                 HttpStatus.valueOf(e.getStatusCode())
         );
     }
+
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -75,6 +80,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleClassCastException(HttpMessageNotReadableException e) {
 
         BaseException baseException = new BaseException(ErrorCode.TRIP_ENUM_ERROR);
+
+        return new ResponseEntity<>(
+                ApiResponse.fail(baseException.getStatusCode(), baseException.getMessage()),
+                HttpStatus.valueOf(baseException.getStatusCode())
+        );
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<String>> handleAuthenticationException(AuthenticationException e) {
+        log.info(log + "log내용");
+        BaseException baseException = new BaseException(ErrorCode.USER_NO_APPROVE_ERROR);
+
+        return new ResponseEntity<>(
+                ApiResponse.fail(baseException.getStatusCode(), baseException.getMessage()),
+                HttpStatus.valueOf(baseException.getStatusCode())
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(AccessDeniedException e) {
+        BaseException baseException = new BaseException(ErrorCode.USER_NO_APPROVE_ERROR);
 
         return new ResponseEntity<>(
                 ApiResponse.fail(baseException.getStatusCode(), baseException.getMessage()),

@@ -2,15 +2,16 @@ package toy.five.triprecord.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toy.five.triprecord.domain.user.dto.request.UserCreateRequest;
 import toy.five.triprecord.domain.user.dto.request.UserPatchRequest;
 import toy.five.triprecord.domain.user.dto.request.UserUpdateReqeust;
-import toy.five.triprecord.domain.user.dto.response.UserCreateResponse;
-import toy.five.triprecord.domain.user.dto.response.UserGetResponse;
-import toy.five.triprecord.domain.user.dto.response.UserPatchResponse;
-import toy.five.triprecord.domain.user.dto.response.UserUpdateResponse;
+import toy.five.triprecord.domain.user.dto.response.*;
 import toy.five.triprecord.domain.user.entity.User;
 import toy.five.triprecord.domain.user.repository.UserRepository;
 import toy.five.triprecord.global.exception.BaseException;
@@ -22,6 +23,8 @@ import toy.five.triprecord.global.exception.ErrorCode;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Transactional(readOnly = true)
     public UserGetResponse getUserInfo(String email) {
@@ -29,9 +32,11 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_CAN_NOT_FIND_EMAIL));
 
+
         return UserGetResponse.fromEntity(user);
 
     }
+
 
     @Transactional
     public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
@@ -40,9 +45,11 @@ public class UserService {
             throw new BaseException(ErrorCode.USER_EMAIL_DUPULICATE_ERROR);
         }
 
+        System.out.println(passwordEncoder.encode(userCreateRequest.getPassword()));
+
         User newUser = User.builder()
                 .email(userCreateRequest.getEmail())
-                .password(userCreateRequest.getPassword())
+                .password(passwordEncoder.encode(userCreateRequest.getPassword()))
                 .name(userCreateRequest.getName())
                 .build();
 
@@ -55,6 +62,9 @@ public class UserService {
         User existedUser = userRepository.findByEmail(userUpdateReqeust.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_CAN_NOT_FIND_EMAIL));
 
+        userUpdateReqeust.setPassword(passwordEncoder.encode(userUpdateReqeust.getPassword()));
+
+
         existedUser.setUpdateColumns(userUpdateReqeust);
 
         return UserUpdateResponse.fromEntity(existedUser);
@@ -66,6 +76,9 @@ public class UserService {
         User existedUser = userRepository.findByEmail(userPatchRequest.getEmail())
                 .orElseThrow(() -> new BaseException((ErrorCode.USER_CAN_NOT_FIND_EMAIL)));
 
+        if (!StringUtils.isBlank(userPatchRequest.getPassword())) {
+            userPatchRequest.setPassword(passwordEncoder.encode(userPatchRequest.getPassword()));
+        }
         existedUser.setPatchColumns(userPatchRequest);
 
         return UserPatchResponse.fromEntity(existedUser);

@@ -25,7 +25,7 @@ public class TripSetUp {
                     .build();
 
     public TripCreateResponse saveTrip() {
-        return tripService.createTrip(tripCreateRequest);
+        return tripService.createTrip(tripCreateRequest, "test12345@test.com");
     }
 
 }

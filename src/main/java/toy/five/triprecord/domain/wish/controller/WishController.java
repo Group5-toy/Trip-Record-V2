@@ -12,6 +12,8 @@ import toy.five.triprecord.domain.wish.service.WishService;
 import toy.five.triprecord.global.common.StatusCode;
 import toy.five.triprecord.global.exception.ApiResponse;
 
+import java.security.Principal;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -19,24 +21,24 @@ public class WishController {
 
     private final WishService wishService;
 
-    @PostMapping("wishes/{tripId}/{userId}")
-    public ResponseEntity<ApiResponse> wishTrip(@PathVariable Long userId, @PathVariable Long tripId) {
+    @PostMapping("wishes/{tripId}")
+    public ResponseEntity<ApiResponse> wishTrip(@PathVariable Long tripId, Principal principal) {
         return ResponseEntity.ok(
                 ApiResponse.builder()
                         .status(String.valueOf(StatusCode.SUCCESS))
                         .code(HttpStatus.OK.value())
-                        .data(wishService.saveWish(userId, tripId))
+                        .data(wishService.saveWish(principal.getName(), tripId))
                         .build()
         );
     }
 
-    @DeleteMapping("wishes/{tripId}/{userId}")
-    public ResponseEntity<ApiResponse> unWishTrip(@PathVariable Long userId, @PathVariable Long tripId) {
+    @DeleteMapping("wishes/{tripId}")
+    public ResponseEntity<ApiResponse> unWishTrip(@PathVariable Long tripId, Principal principal) {
         return ResponseEntity.ok(
                 ApiResponse.builder()
                         .status(String.valueOf(StatusCode.SUCCESS))
                         .code(HttpStatus.OK.value())
-                        .data(wishService.deleteWish(userId, tripId))
+                        .data(wishService.deleteWish(principal.getName(), tripId))
                         .build()
         );
     }

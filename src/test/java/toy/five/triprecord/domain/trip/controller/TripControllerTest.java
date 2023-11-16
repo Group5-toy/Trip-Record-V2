@@ -1,6 +1,8 @@
 package toy.five.triprecord.domain.trip.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,6 +59,9 @@ class TripControllerTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private EntityManagerFactory emFactory;
+
     @BeforeEach
     void setUp() {
         this.mvc = MockMvcBuilders
@@ -106,7 +110,7 @@ class TripControllerTest {
                         .wishCount(0L)
                         .build();
 
-        given(tripService.createTrip(any(TripCreateRequest.class)))
+        given(tripService.createTrip(any(TripCreateRequest.class), any(String.class)))
                 .willReturn(tripResponse);
 
         //when

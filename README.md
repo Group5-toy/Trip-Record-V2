@@ -97,7 +97,7 @@
 ![trip_trips-all](https://github.com/Group5-toy/KDT_Y_BE_Toy_Project3/assets/97028441/bbb26e7e-1ed2-4a23-acb0-8eec7efe11a0)
 ### trips-myAll(get)
 ![trip_trips-myAll(get)](https://github.com/Group5-toy/KDT_Y_BE_Toy_Project3/assets/97028441/43823092-339b-4df1-81c5-d0629e15b1c8)
-### trps-search(get)
+### trips-search(get)
 ![trip_trps-search(get)](https://github.com/Group5-toy/KDT_Y_BE_Toy_Project3/assets/97028441/6c8cb143-f471-46d3-ae65-a9ca0aa4f509)
 
 ## Journey

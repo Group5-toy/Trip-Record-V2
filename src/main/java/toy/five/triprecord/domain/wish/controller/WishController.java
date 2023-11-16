@@ -1,4 +1,4 @@
-package toy.five.triprecord.domain.wish.conroller;
+package toy.five.triprecord.domain.wish.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

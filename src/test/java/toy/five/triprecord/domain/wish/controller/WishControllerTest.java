@@ -1,4 +1,4 @@
-package toy.five.triprecord.domain.wish.conroller;
+package toy.five.triprecord.domain.wish.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

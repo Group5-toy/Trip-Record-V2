@@ -56,7 +56,6 @@ public class UserController {
     @PostMapping("login-user")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
         List<String> tokens = jwtTokenService.generateToken(userLoginRequest);
-        System.out.println("테스트1");
         tokenRepository.save(new RefreshToken(userLoginRequest.getEmail(),tokens.get(1)));
 
         return ResponseEntity.ok(ApiResponse.builder()

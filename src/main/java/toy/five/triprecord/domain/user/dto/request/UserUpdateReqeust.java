@@ -33,9 +33,6 @@ public class UserUpdateReqeust {
     private String name;
 
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 
 }

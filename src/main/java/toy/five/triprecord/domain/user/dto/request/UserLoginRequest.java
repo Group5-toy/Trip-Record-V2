@@ -26,9 +26,9 @@ public class UserLoginRequest {
     @PasswordConstraint
     private String password;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
+
+
 
 
 }

@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.json:json:20210307'
+	testImplementation 'com.h2database:h2'
 
 
 	// JWT 관련 의존성 (버전 똑같이 맞춰주자)

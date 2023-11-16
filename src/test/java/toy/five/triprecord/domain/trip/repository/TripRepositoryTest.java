@@ -1,25 +1,22 @@
 package toy.five.triprecord.domain.trip.repository;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import toy.five.triprecord.domain.trip.dto.request.TripSearchCond;
 import toy.five.triprecord.domain.trip.entity.Trip;
+import toy.five.triprecord.global.config.QueryDSLConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static toy.five.triprecord.domain.trip.entity.Domestic.DOMESTIC;
 
 @DataJpaTest
-//@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
-@AutoConfigureTestDatabase
+@Import({QueryDSLConfig.class})
 class TripRepositoryTest {
 
     @Autowired

@@ -8,9 +8,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import toy.five.triprecord.domain.user.dto.request.UserLoginRequest;
 import toy.five.triprecord.global.exception.BaseException;
 import toy.five.triprecord.global.exception.ErrorCode;
-import toy.five.triprecord.global.security.entity.RefreshToken;
 import toy.five.triprecord.global.security.repository.TokenRepository;
 
 import java.security.Key;
@@ -37,8 +33,8 @@ public class JwtTokenService {
     @Value("${spring.jwt.secret}")
     private String jwtSecret;
 
-    private int accessTokenExpMinutes = 1;
-    private int refreshTokenExpMinutes = 1;
+    private int accessTokenExpMinutes = 10;
+    private int refreshTokenExpMinutes = 100;
 
 
 
@@ -53,21 +49,6 @@ public class JwtTokenService {
         }
 
     }
-    /**
-    public void authenticate(UserLoginRequest userLoginRequest) {
-       try {
-           authenticationManager.authenticate(
-                   new UsernamePasswordAuthenticationToken(
-                           userLoginRequest.getEmail(),
-                           userLoginRequest.getPassword()
-                   )
-           );
-       }catch (AuthenticationException e) {
-          throw new BaseException(ErrorCode.USER_NO_APPROVE_ERROR);
-      }
-    }
-     **/
-
     public List<String> generateToken(UserLoginRequest userLoginRequest) {
         // 로그인 요청에 대한 인증을 수행합니다.
         // 이 부분은 사용자의 아이디와 비밀번호를 확인하는 로직으로 구현해야 합니다.

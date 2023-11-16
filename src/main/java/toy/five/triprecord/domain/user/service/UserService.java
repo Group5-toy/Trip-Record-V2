@@ -62,7 +62,7 @@ public class UserService {
         User existedUser = userRepository.findByEmail(userUpdateReqeust.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_CAN_NOT_FIND_EMAIL));
 
-        userUpdateReqeust.setPassword(passwordEncoder.encode(userUpdateReqeust.getPassword()));
+        userUpdateReqeust.builder().password(passwordEncoder.encode(userUpdateReqeust.getPassword()));
 
 
         existedUser.setUpdateColumns(userUpdateReqeust);
@@ -77,7 +77,7 @@ public class UserService {
                 .orElseThrow(() -> new BaseException((ErrorCode.USER_CAN_NOT_FIND_EMAIL)));
 
         if (!StringUtils.isBlank(userPatchRequest.getPassword())) {
-            userPatchRequest.setPassword(passwordEncoder.encode(userPatchRequest.getPassword()));
+            userPatchRequest.builder().password(passwordEncoder.encode(userPatchRequest.getPassword()));
         }
         existedUser.setPatchColumns(userPatchRequest);
 

@@ -34,7 +34,5 @@ public class UserPatchRequest {
     @NotBlank(message ="이름을 입력해주세요.")
     private String name;
 
-    public void setPassword(String password)  {
-        this.password = password;
-    }
+
 }

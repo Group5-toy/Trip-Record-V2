@@ -83,9 +83,8 @@
 - ‘기획안’ 폴더에 해당 프로젝트의 기획안, API명세서, 시스템 아키텍쳐 자료가 들어있습니다.
 - ‘구동 모습’ 폴더에도 구동장면 스크린샷들이 들어있습니다.
 
+# 📷 Screenshot
 
-
-# 동작사진
 ## User
 ### createUser
 ![유저 도메인_createUser](https://github.com/Group5-toy/KDT_Y_BE_Toy_Project3/assets/97028441/3b34f0ec-cee1-4bf0-860b-39888640cf94)
